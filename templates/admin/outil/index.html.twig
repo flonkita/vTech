@@ -1,0 +1,65 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Outils
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+
+		<h1 class="h3 mb-0 text-gray-800">Mes Outils</h1>
+
+		<p class="mb-4">Ajouter,modifier et supprimer des outils.</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-success">
+					<a href="{{path('admin_outil_new')}}" class="m-0 font-weight-bold text-success ">Ajouter un outil</a>
+				</h6>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Nom</th>
+								<th>Url</th>
+								<th>Statut</th>
+								<th>Description</th>
+								<th colspan="2">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for outil in outils %}
+								<tr>
+									<td>{{outil.id}}</td>
+									<td>{{outil.nom}}</td>
+									<td>{{outil.url}}</td>
+									<td>{{outil.status}}</td>
+									<td>{{outil.description}}</td>
+									<td>
+										<a href="{{path('admin_outil_delete',{'id':outil.id})}}" class="btn btn-danger btn-icon-split">
+											<span class="icon text-white-50">
+												<i class="fas fa-trash"></i>
+											</span>
+
+
+										</a>
+										<a href="{{path('admin_outil_edit',{'id':outil.id})}}" class="btn btn-warning btn-icon-split">
+											<span class="icon text-white-50">
+												<i class="fa-solid fa-pen-to-square"></i>
+											</span>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}

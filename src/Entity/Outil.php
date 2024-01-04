@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OutilRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,14 @@ class Outil
 
     #[ORM\Column(length: 255)]
     private ?string $statut = null;
+
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'outils')]
+    private Collection $Tags;
+
+    public function __construct()
+    {
+        $this->Tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +130,30 @@ class Outil
     public function setStatut(string $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->Tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->Tags->contains($tag)) {
+            $this->Tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        $this->Tags->removeElement($tag);
 
         return $this;
     }

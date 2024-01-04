@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -18,6 +20,14 @@ class Tag
 
     #[ORM\Column(length: 255)]
     private ?string $couleur = null;
+
+    #[ORM\ManyToMany(targetEntity: Outil::class, mappedBy: 'Tags')]
+    private Collection $outils;
+
+    public function __construct()
+    {
+        $this->outils = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +54,33 @@ class Tag
     public function setCouleur(string $couleur): static
     {
         $this->couleur = $couleur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Outil>
+     */
+    public function getOutils(): Collection
+    {
+        return $this->outils;
+    }
+
+    public function addOutil(Outil $outil): static
+    {
+        if (!$this->outils->contains($outil)) {
+            $this->outils->add($outil);
+            $outil->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOutil(Outil $outil): static
+    {
+        if ($this->outils->removeElement($outil)) {
+            $outil->removeTag($this);
+        }
 
         return $this;
     }
