@@ -1,0 +1,32 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tags
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<div class="container">
+			<div class="container-fluid p-3  w-100 mx-auto bg-white border rounded">
+				<h1 class="h3 mb-0 text-gray-800">Tags</h1>
+
+				<p class="mb-2">Modifier un Tag</p>
+				{{ form_start(formTag) }}
+				<div class="row g-3">
+
+					<div class="col-6">
+						{{form_row(formTag.nom)}}
+					</div>
+
+					<div class="col-6">
+						{{form_row(formTag.couleur)}}
+					</div>
+
+
+				</div>
+				{{ form_end(formTag) }}
+			</div>
+		</div>
+
+
+	</div>
+{% endblock %}

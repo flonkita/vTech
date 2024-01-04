@@ -1,20 +1,20 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Outils
+{% block title %}Tags
 {% endblock %}
 
 {% block content %}
 	<div class="container-fluid">
 
-		<h1 class="h3 mb-0 text-gray-800">Mes Outils</h1>
+		<h1 class="h3 mb-0 text-gray-800">Mes Tags</h1>
 
-		<p class="mb-4">Ajouter,modifier et supprimer des outils.</p>
+		<p class="mb-4">Ajouter,modifier et supprimer des tags.</p>
 
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
 				<h6 class="m-0 font-weight-bold text-success">
-					<a href="{{path('admin_outil_new')}}" class="m-0 font-weight-bold text-success ">Ajouter un outil</a>
+					<a href="{{path('admin_tag_new')}}" class="m-0 font-weight-bold text-success ">Ajouter un tag</a>
 				</h6>
 			</div>
 			<div class="card-body">
@@ -24,29 +24,25 @@
 							<tr>
 								<th>ID</th>
 								<th>Nom</th>
-								<th>Url</th>
-								<th>Statut</th>
-								<th>Description</th>
-								<th colspan="2">Action</th>
+								<th>Couleur</th>
+								<th colspan="3">Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for outil in outils %}
+							{% for tag in tag %}
 								<tr>
-									<td>{{outil.id}}</td>
-									<td>{{outil.nom}}</td>
-									<td>{{outil.url}}</td>
-									<td>{{outil.statut}}</td>
-									<td>{{outil.description}}</td>
+									<td>{{tag.id}}</td>
+									<td>{{tag.nom}}</td>
+									<td>{{tag.couleur}}</td>
 									<td>
-										<a href="{{path('admin_outil_delete',{'id':outil.id})}}" class="btn btn-danger btn-icon-split">
+										<a href="{{path('admin_tag_delete',{'id':tag.id})}}" class="btn btn-danger btn-icon-split">
 											<span class="icon text-white-50">
 												<i class="fas fa-trash"></i>
 											</span>
 
 
 										</a>
-										<a href="{{path('admin_outil_edit',{'id':outil.id})}}" class="btn btn-warning btn-icon-split">
+										<a href="{{path('admin_tag_edit',{'id':tag.id})}}" class="btn btn-warning btn-icon-split">
 											<span class="icon text-white-50">
 												<i class="fa-solid fa-pen-to-square"></i>
 											</span>

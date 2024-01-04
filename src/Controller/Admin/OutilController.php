@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Outil;
 use App\Form\OutilType;
 use App\Repository\OutilRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +19,7 @@ class OutilController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(OutilRepository $outilRepository): Response
     {
-        return $this->render('admin/index.html.twig', [
+        return $this->render('admin/outil/index.html.twig', [
             'outils' => $outilRepository->findAll(),
         ]);
     }
@@ -35,6 +37,10 @@ class OutilController extends AbstractController
         if ($formOutil->isSubmitted() && $formOutil->isValid()) {
             $data = $formOutil->getData();
 
+            // Ajout de la date de publication
+            $now = new DateTimeImmutable();
+            $data->setPublishedAt($now);
+            
             if ($formOutil->get('image')->getData() == null) {
                 $image = null;
             } else {
@@ -64,5 +70,65 @@ class OutilController extends AbstractController
         return $this->render('admin/outil/new.html.twig', [
             'formOutil' => $formOutil->createView()
         ]);
+    }
+
+
+    #[Route('{id}/edit', name : 'edit', methods : ["GET","POST"])]
+    public function edit(Request $request, Outil $outil, OutilRepository $outilRepository, ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $this->$doctrine->getManager();
+        $formOutil = $this->createForm(OutilType::class, $outil);
+        $formOutil->handleRequest($request);
+
+        if ($formOutil->isSubmitted() && $formOutil->isValid()) {
+            $data = $formOutil->getData();
+            // Ajout de la date de modification
+            $now = new DateTime();
+            $data->setModifiedAt($now);
+
+            if ($formOutil->get('image')->getData() == null) {
+                $image_name = $outil->getImage();
+            } else {
+                $image_name = $formOutil->get('image')->getData()->getClientOriginalName();
+                $image_name = uniqid() . $image_name;
+                $formOutil->get('image')->getData()->move(
+                    $this->getParameter('images_directory'),
+                    $image_name
+                );
+            }
+
+
+            if ($image_name) {
+                $data->setImage($image_name);
+            }
+
+            $entityManager->persist($data);
+            $entityManager->flush();
+            $outilRepository->add($outil, true);
+            return $this->redirectToRoute('admin_outil_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/outil/edit.html.twig', [
+            'outil' => $outil,
+            'formOutil' => $formOutil,
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'delete')]
+    public function delete($id, Outil $outil, ManagerRegistry $doctrine): Response
+    {
+        #Etape 1 : On appelle l'entity manager de doctrine
+        $entityManager = $doctrine->getManager();
+
+        #Etape 2 : On récupère (grâce au repository de doctrine) l'objet que l'on souhaite modifier
+        $outil = $doctrine->getRepository(Outil::class)->find($id);
+
+        #Etape 3 : On supprime à l'aide de l'entity manager 
+        $entityManager->remove($outil);
+
+        #Etape 4 : On valide les modifications
+        $entityManager->flush();
+
+        return $this->redirectToRoute('admin_outil_index', [], Response::HTTP_SEE_OTHER);
     }
 }
