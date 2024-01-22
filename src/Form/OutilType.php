@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Outil;
+use App\Entity\Tag;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -19,11 +21,11 @@ class OutilType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' =>'Nom de l\'outil'
+                'label' => 'Nom de l\'outil'
             ])
             ->add('URL', UrlType::class, [
-            'label' => 'Lien officiel de l\'outil'
-        ])
+                'label' => 'Lien officiel de l\'outil'
+            ])
             ->add('image', FileType::class, [
                 'label' => 'Image de l\'article',
                 'label_attr' => [
@@ -38,9 +40,16 @@ class OutilType extends AbstractType
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description de l\'article',
-                
+
             ])
-            ->add('Tags')
+            ->add('Tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => function (Tag $tag): string {
+                    return $tag->getNom();
+                },
+                'multiple' => true,
+
+            ])
             ->add('statut', ChoiceType::class, [
                 'choices' => [
                     'Publié' => 'publie',
@@ -52,8 +61,7 @@ class OutilType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary mt-3',
                 ],
-            ]);
-        ;
+            ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

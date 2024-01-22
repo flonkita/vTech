@@ -76,14 +76,14 @@ class OutilController extends AbstractController
     #[Route('{id}/edit', name : 'edit', methods : ["GET","POST"])]
     public function edit(Request $request, Outil $outil, OutilRepository $outilRepository, ManagerRegistry $doctrine): Response
     {
-        $entityManager = $this->$doctrine->getManager();
+        $entityManager = $doctrine->getManager();
         $formOutil = $this->createForm(OutilType::class, $outil);
         $formOutil->handleRequest($request);
 
         if ($formOutil->isSubmitted() && $formOutil->isValid()) {
             $data = $formOutil->getData();
             // Ajout de la date de modification
-            $now = new DateTime();
+            $now = new DateTimeImmutable();
             $data->setModifiedAt($now);
 
             if ($formOutil->get('image')->getData() == null) {
@@ -104,7 +104,7 @@ class OutilController extends AbstractController
 
             $entityManager->persist($data);
             $entityManager->flush();
-            $outilRepository->add($outil, true);
+            // $outilRepository->add($outil, true);
             return $this->redirectToRoute('admin_outil_index', [], Response::HTTP_SEE_OTHER);
         }
 
