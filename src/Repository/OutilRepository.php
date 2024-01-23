@@ -21,6 +21,14 @@ class OutilRepository extends ServiceEntityRepository
         parent::__construct($registry, Outil::class);
     }
 
+    public function paginationQuery()
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.statut = :statut')
+            ->setParameter('statut', 'publie')
+            ->orderBy('o.PublishedAt');
+    }
+
 //    /**
 //     * @return Outil[] Returns an array of Outil objects
 //     */
