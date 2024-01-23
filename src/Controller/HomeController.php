@@ -14,7 +14,9 @@ class HomeController extends AbstractController
     public function index(OutilRepository $outilRepository, TagRepository $tagRepository): Response
     {
         return $this->render('home/index.html.twig', [
-            'outils' => $outilRepository->findAll(),
+            'outils' => $outilRepository->findBy([
+                'statut' => 'publie'
+            ]),
             'tag' => $tagRepository->findAll(),
         ]);
     }   
