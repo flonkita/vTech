@@ -24,7 +24,7 @@ class HomeController extends AbstractController
         $pagination = $paginator->paginate(
             $outilRepository->paginationQuery(),
             $request->query->get('page', 1),
-            1
+            3 // limite d'outils à afficher pour passer à la page suivante
         );
         return $this->render('home/index.html.twig', [
             'pagination' => $pagination,
