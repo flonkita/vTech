@@ -24,7 +24,7 @@ class HomeController extends AbstractController
         $pagination = $paginator->paginate(
             $outilRepository->paginationQuery(),
             $request->query->get('page', 1),
-            1
+            5
         );
         return $this->render('home/index.html.twig', [
             'pagination' => $pagination,
