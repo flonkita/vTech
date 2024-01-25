@@ -31,7 +31,7 @@ class Outil
     #[ORM\Column]
     private ?\DateTimeImmutable $PublishedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]    
     private ?\DateTimeImmutable $ModifiedAt = null;
 
     #[ORM\Column(length: 255)]
@@ -157,4 +157,5 @@ class Outil
 
         return $this;
     }
+
 }
