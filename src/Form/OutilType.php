@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class OutilType extends AbstractType
 {
@@ -21,25 +22,39 @@ class OutilType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom de l\'outil'
+                'label' => 'Nom de l\'outil',
+            'required' => true
             ])
             ->add('URL', UrlType::class, [
-                'label' => 'Lien officiel de l\'outil'
+                'label' => 'Lien officiel de l\'outil',
+            'required' => true
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image de l\'article',
                 'label_attr' => [
                     'class' => 'mt-3 mb-3',
                 ],
+            'constraints' => [
+                new File([
+                    'maxSize' => '1024k',
+                    'maxSizeMessage' => 'Le fichier ne doit pas dépasser 1Mo',
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => 'Uniquement les fichiers JPG et PNG sont autorisés',
+                ])
+            ],
                 'attr' => [
                     'class' => 'form-control-file',
                 ],
                 'mapped' => false,
-                'required' => false,
+                'required' => true,
                 'error_bubbling' => true,
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description de l\'article',
+            'required' => false
 
             ])
             ->add('tags', EntityType::class, [

@@ -1,35 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello HomeController!
+{% endblock %}
 
 {% block body %}
 
-    {% for outil in pagination %}
-<div class="row">
-	<div class="col-md-7">
-		<a href="#">
-<img class="img-fluid rounded mb-3 mb-md-0" src="{{ asset('/uploads/' ~ outil.image) }}" alt="">
-		</a>
+	{% for outil in pagination %}
+		<div class="row">
+			<div class="col-md-7">
+				<a href="#">
+					<img class="img-fluid rounded mb-3 mb-md-0" src="{{ asset('/uploads/' ~ outil.image) }}" alt="{{outil.nom}}" width="320">
+
+
+				</a>
+			</div>
+			<div class="col-md-5">
+				<h3>{{outil.nom}}</h3>
+{% for tag in outil.getTags() %}
+	<span style="color: {{ tag.couleur }}">{{ tag.nom }}</span>
+{% endfor %}
+
+				<p>{{outil.description}}</p>
+				<a class="btn btn-primary" href="{{outil.URL}}">View Project</a>
+			</div>
+		</div>
+		<!-- /.row -->
+
+		<hr>
+
+
+	{% endfor %}
+
+	<div class="example-wrapper">
+
+		<div class="pagination justify-content-center">
+			{{ knp_pagination_render(pagination)}}
+		</div>
+
+
 	</div>
-	<div class="col-md-5">
-		<h3>{{outil.nom}}</h3>
-		<p>{{outil.description}}</p>
-		<a class="btn btn-primary" href="{{outil.URL}}">View Project</a>
-	</div>
-</div>
-<!-- /.row -->
-
-<hr>
-
-
-    {% endfor %}
-
-<div class="example-wrapper">
-
-<div class="pagination justify-content-center">
-	{{ knp_pagination_render(pagination)}}
-</div>
-
-    
-</div>
 {% endblock %}
