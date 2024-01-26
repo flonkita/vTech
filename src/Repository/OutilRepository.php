@@ -3,8 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Outil;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Form\SearchType;
+use App\model\SearchData;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 
 /**
  * @extends ServiceEntityRepository<Outil>
@@ -27,6 +32,30 @@ class OutilRepository extends ServiceEntityRepository
             ->where('o.statut = :statut')
             ->setParameter('statut', 'publie')
             ->orderBy('o.PublishedAt');
+    }
+
+    public function findBySearch(
+        SearchData $searchData
+    ): PaginationInterface
+    {
+        $data = $this->createQueryBuilder('p')
+            ->where('p.statut LIKE :statut')
+            ->setParameter('statut', 'publie')
+            ->orderBy('p.PublishedAt', 'DESC');
+
+        if (!empty($searchData->q)) {
+            $data = $data
+                ->andWhere('p.nom LIKE :q')
+                ->setParameter('q', "%{$searchData->q}%");
+        }
+
+        $data = $data
+            ->getQuery()
+            ->getResult();
+
+        $outil = $this->PaginatorInterface ->paginate($data, $searchData->page, 5);
+
+        return $outil;
     }
 
 //    /**

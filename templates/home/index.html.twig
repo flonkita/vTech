@@ -1,42 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
-{% endblock %}
+{% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+	<div class="col-2 bg-secondary rounded-2 p-2 m-2">
+		{% include "outil/search_data.html.twig" with {
+			form: form
+		} only
+		%}
+	</div>
+	<div class="col-9">
 
-	{% for outil in pagination %}
-		<div class="row">
-			<div class="col-md-7">
-				<a href="#">
-					<img class="img-fluid rounded mb-3 mb-md-0" src="{{ asset('/uploads/' ~ outil.image) }}" alt="{{outil.nom}}" width="320">
+    {% for outil in pagination %}
 
-
-				</a>
+		<div class="row bg-secondary rounded-2 m-2 custom-height-200 align-items-center">
+			<div class="col-2 align-items-star align-items-center">
+				<img class="img-fluid rounded custom-square-image" src="{{ asset('/uploads/' ~ outil.image) }}" alt="">
 			</div>
-			<div class="col-md-5">
-				<h3>{{outil.nom}}</h3>
-{% for tag in outil.getTags() %}
-	<span style="color: {{ tag.couleur }}">{{ tag.nom }}</span>
-{% endfor %}
-
-				<p>{{outil.description}}</p>
-				<a class="btn btn-primary" href="{{outil.URL}}">View Project</a>
+			<div class="col justify-content-between">
+				<div>
+					<h3 class="text-primary">{{outil.nom}}</h3>
+					{% for tag in outil.getTags() %}
+						<span class="text-primary p-1 rounded-2" style="background-color: {{ tag.couleur }}">{{ tag.nom }}</span>
+					{% endfor %}
+					<p class="text-primary mt-2">{{outil.description}}</p>
+				</div>
+				<div>
+					<a class="btn btn-primary bg-light text-secondary" href="{{outil.URL}}">Voir l'outil</a>
+				</div>
 			</div>
 		</div>
+
+
 		<!-- /.row -->
-
-		<hr>
-
-
 	{% endfor %}
-
+	</div>
 	<div class="example-wrapper">
-
-		<div class="pagination justify-content-center">
+		<div class="pagination justify-content-center mt-4">
 			{{ knp_pagination_render(pagination)}}
 		</div>
-
-
 	</div>
 {% endblock %}
